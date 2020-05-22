@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hctech2006.statistic.mapper.SubresultMapper">
+  <resultMap id="BaseResultMap" type="cn.hctech2006.statistic.bean.Subresult">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
+    <result column="sub_id" jdbcType="VARCHAR" property="subId" />
+    <result column="sm_id" jdbcType="VARCHAR" property="smId" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from subresult
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.hctech2006.statistic.bean.Subresult">
+    insert into hc_statistics_1.subresult (id, stu_id, sub_id,
+      sm_id, grade)
+    values
+      (#{id,jdbcType=BIGINT}, #{stuId,jdbcType=VARCHAR}, #{subId,jdbcType=VARCHAR},
+      #{smId,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR})
+
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.hctech2006.statistic.bean.Subresult">
+    update subresult
+    set stu_id = #{stuId,jdbcType=VARCHAR},
+      sub_id = #{subId,jdbcType=VARCHAR},
+      sm_id = #{smId,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, stu_id, sub_id, sm_id, grade
+    from subresult
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, stu_id, sub_id, sm_id, grade
+    from subresult
+  </select>
+  <select id="selectByStuIdSubId" parameterType="map" resultMap="BaseResultMap">
+    select id, stu_id, sub_id, sm_id, grade
+    from hc_statistics_1.subresult
+    where stu_id = #{stuId} and sub_id=#{subId}
+  </select>
+  <select id="checkByStuIdAndSmId" parameterType="map" resultType="int">
+    select count(0) from hc_statistics_1.subresult where stu_id=#{stuId} and sm_id=#{smId}
+  </select>
+  <update id="updateGradeByStuIdAndSmId"  parameterType="map">
+    update hc_statistics_1.subresult
+    set
+        grade = #{grade,jdbcType=VARCHAR}
+    where stu_id=#{stuId} and sm_id=#{smId}
+  </update>
+</mapper>

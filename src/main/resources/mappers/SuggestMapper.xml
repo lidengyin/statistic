@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hctech2006.statistic.mapper.SuggestMapper">
+  <resultMap id="BaseResultMap" type="cn.hctech2006.statistic.bean.Suggest">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from suggest
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.hctech2006.statistic.bean.Suggest">
+    insert into hc_statistics_1.suggest (id, stu_id, detail
+      )
+    values (#{id,jdbcType=BIGINT}, #{stuId,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.hctech2006.statistic.bean.Suggest">
+    update suggest
+    set stu_id = #{stuId,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, stu_id, detail
+    from suggest
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, stu_id, detail
+    from suggest
+  </select>
+  <select id="selectByStuId" parameterType="String" resultMap="BaseResultMap">
+    select
+    id, stu_id, detail
+    from hc_statistics_1.suggest where stu_id=#{stuId}
+  </select>
+
+  <select id="checkByStuId" parameterType="String" resultType="int">
+    select  count(0) from hc_statistics_1.suggest where stu_id=#{stuId}
+  </select>
+
+  <update id="updateDetailByStuId" parameterType="map">
+    update hc_statistics_1.suggest
+    set
+        detail = #{detail}
+    where stu_id = #{stuId}
+  </update>
+</mapper>

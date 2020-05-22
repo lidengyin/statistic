@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hctech2006.statistic.mapper.StudentMapper">
+  <resultMap id="BaseResultMap" type="cn.hctech2006.statistic.bean.Student">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="class_id" jdbcType="VARCHAR" property="classId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="emp_id" jdbcType="VARCHAR" property="empId" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="cate_id" jdbcType="VARCHAR" property="cateId" />
+    <result column="indu_id" jdbcType="VARCHAR" property="induId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="suggest" jdbcType="LONGVARCHAR" property="suggest" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from student
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.hctech2006.statistic.bean.Student">
+
+    insert into hc_statistics_1.student (id, stu_id, name,
+      sex, class_id, phone, 
+      email, emp_id, company, 
+      address, cate_id, indu_id, 
+      create_time, status, suggest
+      )
+    values (#{id,jdbcType=BIGINT}, #{stuId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{classId,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{cateId,jdbcType=VARCHAR}, #{induId,jdbcType=VARCHAR}, 
+      now(), 0, #{suggest,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.hctech2006.statistic.bean.Student">
+    update student
+    set stu_id = #{stuId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      class_id = #{classId,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      emp_id = #{empId,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      cate_id = #{cateId,jdbcType=VARCHAR},
+      indu_id = #{induId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      suggest = #{suggest,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, stu_id, name, sex, class_id, phone, email, emp_id, company, address, cate_id, 
+    indu_id, create_time, status, suggest
+    from student
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, stu_id, name, sex, class_id, phone, email, emp_id, company, address, cate_id, 
+    indu_id, create_time, status, suggest
+    from student where status=1
+  </select>
+  <select id="selectByStuId" parameterType="String" resultMap="BaseResultMap">
+    select
+        id, stu_id, name, sex, class_id, phone, email, emp_id, company, address, cate_id, indu_id, create_time, suggest, status
+    from hc_statistics_1.student where stu_id = #{stuId}
+  </select>
+  <select id="selectStudent" parameterType="map" resultMap="BaseResultMap">
+    select
+        id, stu_id, name, sex, class_id, phone, email, emp_id, company, address, cate_id, indu_id, create_time, suggest, status
+    from hc_statistics_1.student
+    where 1 =1 and
+    status=1
+    order by stu_id asc ,class_id asc
+    <if test="classId != null and classId != ''">
+      and class_id=#{classId}
+    </if>
+    <if test="empId != null and empId != ''">
+      and emp_id=#{empId}
+    </if>
+    <if test="induId != null and induId != ''">
+      and indu_id=#{induId}
+    </if>
+    <if test="cateId != null and cateId != ''">
+      and cate_id=#{cateId}
+    </if>
+
+  </select>
+  <update id="updateByStuId" parameterType="cn.hctech2006.statistic.bean.Student">
+    update hc_statistics_1.student
+    set
+        name = #{name,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=VARCHAR},
+        class_id = #{classId,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        emp_id = #{empId,jdbcType=VARCHAR},
+        company = #{company,jdbcType=VARCHAR},
+        address = #{address,jdbcType=VARCHAR},
+        cate_id = #{cateId,jdbcType=VARCHAR},
+        indu_id = #{induId,jdbcType=VARCHAR}
+    where stu_id = #{stuId}
+  </update>
+  <update id="updateStatus" parameterType="String">
+    update hc_statistics_1.student
+        set status = 1
+        where stu_id=#{stuId}
+  </update>
+
+  <select id="checkByStuId" parameterType="String" resultType="int">
+    select
+        count(0)
+    from hc_statistics_1.student where stu_id=#{stuId} and status=1
+  </select>
+  <select id="checkCountByClassId" parameterType="String" resultType="int">
+    select count(0)
+    from hc_statistics_1.student
+    where class_id=#{classId} and status=1
+
+  </select>
+</mapper>

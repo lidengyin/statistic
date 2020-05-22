@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hctech2006.statistic.mapper.IndustryMapper">
+  <resultMap id="BaseResultMap" type="cn.hctech2006.statistic.bean.Industry">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="industry_id" jdbcType="VARCHAR" property="industryId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from hc_statistics_1.industry
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.hctech2006.statistic.bean.Industry">
+
+    insert into hc_statistics_1.industry (id, industry_id, name
+      )
+    values (#{id,jdbcType=BIGINT}, #{industryId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.hctech2006.statistic.bean.Industry">
+    update hc_statistics_1.industry
+    set industry_id = #{industryId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, industry_id, name
+    from hc_statistics_1.industry
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, industry_id, name
+    from hc_statistics_1.industry
+  </select>
+  <select id="selectByInduId" parameterType="String" resultMap="BaseResultMap">
+    select
+        id, industry_id, name
+    from hc_statistics_1.industry
+    where industry_id = #{induId}
+  </select>
+</mapper>

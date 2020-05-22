@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hctech2006.statistic.mapper.EmployMapper">
+  <resultMap id="BaseResultMap" type="cn.hctech2006.statistic.bean.Employ">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="emp_id" jdbcType="VARCHAR" property="empId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hc_statistics_1.employ
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.hctech2006.statistic.bean.Employ">
+
+    insert into hc_statistics_1.employ (id, emp_id, name
+      )
+    values (#{id,jdbcType=INTEGER}, #{empId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.hctech2006.statistic.bean.Employ">
+    update hc_statistics_1.employ
+    set emp_id = #{empId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, emp_id, name
+    from hc_statistics_1.employ
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, emp_id, name
+    from hc_statistics_1.employ
+  </select>
+  <select id="selectByEmpId" parameterType="String" resultMap="BaseResultMap">
+    select
+        id, emp_id, name
+    from hc_statistics_1.employ where emp_id=#{empId}
+  </select>
+</mapper>
