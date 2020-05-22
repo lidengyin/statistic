@@ -66,8 +66,8 @@ public class StudentController {
     }
     @ApiOperation(value = "获取每班有效统计人数")
     @RequestMapping(value = "/get_class_count.do",method = RequestMethod.GET)
-    public ServerResponse checkCountByClassId(String classId){
-        return studentService.checkCountByClassId(classId);
+    public ServerResponse checkCountByClassId(){
+        return studentService.getAllCount();
     }
 
 }

@@ -9,4 +9,5 @@ public interface StudentService {
     public ServerResponse getDetail(String stuId);
     public ServerResponse selectStudent(String classId, String empId, String cateId, String induId);
     public ServerResponse checkCountByClassId(String classId);
+    public ServerResponse getAllCount();
 }

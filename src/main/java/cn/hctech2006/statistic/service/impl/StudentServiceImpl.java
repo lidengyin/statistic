@@ -13,10 +13,12 @@ import cn.hctech2006.statistic.vo.StudentOnlyVo;
 import cn.hctech2006.statistic.vo.StudentVo;
 import cn.hctech2006.statistic.vo.SubjectVo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -133,5 +135,16 @@ public class StudentServiceImpl implements StudentService {
     public ServerResponse checkCountByClassId(String classId){
         int count = studentMapper.checkCountByClassId(classId);
         return ServerResponse.createBySuccess(count);
+    }
+    public ServerResponse getAllCount(){
+        List<Class> classList = classMapper.selectAll();
+        Map<String, String> classCount = Maps.newHashMap();
+        int totalCount = 0;
+        for (Class cla : classList){
+            totalCount+=studentMapper.checkCountByClassId(cla.getClassId());
+            classCount.put(cla.getClassName(), studentMapper.checkCountByClassId(cla.getClassId())+"");
+        }
+        classCount.put("总人数",totalCount+"");
+        return ServerResponse.createBySuccess(classCount);
     }
 }

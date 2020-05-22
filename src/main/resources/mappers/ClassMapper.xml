@@ -38,4 +38,8 @@
     from hc_statistics_1.class
     where class_id=#{classId}
   </select>
+  <select id="selectAllStuId" resultType="String">
+    select class_id
+    from hc_statistics_1.class
+  </select>
 </mapper>

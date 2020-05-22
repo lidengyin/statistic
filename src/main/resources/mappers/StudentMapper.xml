@@ -77,7 +77,7 @@
     from hc_statistics_1.student
     where 1 =1 and
     status=1
-    order by stu_id asc ,class_id asc
+
     <if test="classId != null and classId != ''">
       and class_id=#{classId}
     </if>
@@ -90,7 +90,7 @@
     <if test="cateId != null and cateId != ''">
       and cate_id=#{cateId}
     </if>
-
+    order by stu_id asc ,class_id asc
   </select>
   <update id="updateByStuId" parameterType="cn.hctech2006.statistic.bean.Student">
     update hc_statistics_1.student

@@ -17,4 +17,6 @@ public interface ClassMapper {
     int updateByPrimaryKey(Class record);
 
     Class selectByClassId(String classId);
+
+    //List<String> selectAllStuId();
 }
