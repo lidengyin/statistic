@@ -212,7 +212,69 @@ public class Const {
             throw new RuntimeException("没有找到对应的枚举");
         }
     }
+    public enum SubGrade{
 
+        VeryHigh("非常高",5),
+        High("较高",4),
+        Normal("一般",3),
+        Low("较低",2),
+        VeryLow("非常低",1)
+        ;
+        private String gradeStr;
+        private int gradeNum;
 
+        SubGrade(String gradeStr, int gradeNum) {
+            this.gradeStr = gradeStr;
+            this.gradeNum = gradeNum;
+        }
+
+        public String getGradeStr() {
+            return gradeStr;
+        }
+
+        public void setGradeStr(String gradeStr) {
+            this.gradeStr = gradeStr;
+        }
+
+        public int getGradeNum() {
+            return gradeNum;
+        }
+
+        public void setGradeNum(int gradeNum) {
+            this.gradeNum = gradeNum;
+        }
+    }
+
+    public enum EvaGrade{
+        Prefect("完全达到",5),
+        VeryHigh("基本达到",4),
+        High("达到",3),
+        Normal("基本未达到",2),
+        VeryLow("完全未达到",1)
+        ;
+        private String gradeStr;
+        private int gradeNum;
+
+        EvaGrade(String gradeStr, int gradeNum) {
+            this.gradeStr = gradeStr;
+            this.gradeNum = gradeNum;
+        }
+
+        public String getGradeStr() {
+            return gradeStr;
+        }
+
+        public void setGradeStr(String gradeStr) {
+            this.gradeStr = gradeStr;
+        }
+
+        public int getGradeNum() {
+            return gradeNum;
+        }
+
+        public void setGradeNum(int gradeNum) {
+            this.gradeNum = gradeNum;
+        }
+    }
 
 }

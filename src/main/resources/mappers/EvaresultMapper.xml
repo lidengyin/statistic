@@ -53,4 +53,9 @@
         grade = #{grade,jdbcType=VARCHAR}
     where stu_id=#{stuId} and es_id=#{esId}
   </update>
+  <select id="selectGradeByEsId" parameterType="String" resultMap="BaseResultMap">
+    select
+        *
+    from hc_statistics_1.evaresult where es_id=#{esId}
+  </select>
 </mapper>

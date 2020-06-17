@@ -99,3 +99,8 @@ services:
     ports:
       - 8251:8251
     restart: on-failure
+  statistics-1:
+    image: 172.18.72.134:5000/statistic:0.0.1-SNAPSHOT
+    ports:
+      - 8252:8252
+    restart: on-failure

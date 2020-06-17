@@ -56,5 +56,6 @@ public class SubjectController {
         return subjectService.getAllSubJectVo();
     }
 
+//    public ServerResponse getPerSubj
 
 }

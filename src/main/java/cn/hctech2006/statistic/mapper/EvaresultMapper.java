@@ -22,6 +22,7 @@ public interface EvaresultMapper {
     int checkBystuIdAndEsId(String stuId, String esId);
 
     int updateGradeByStuIdAndEsId(String stuId, String esId, String grade);
+    List<Evaresult> selectGradeByEsId(String esId);
 
 
 }

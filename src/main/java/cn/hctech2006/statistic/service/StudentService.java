@@ -10,4 +10,5 @@ public interface StudentService {
     public ServerResponse selectStudent(String classId, String empId, String cateId, String induId);
     public ServerResponse checkCountByClassId(String classId);
     public ServerResponse getAllCount();
+    public ServerResponse getAllGradePerSmall();
 }

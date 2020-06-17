@@ -1,23 +1,25 @@
 package cn.hctech2006.statistic.service.impl;
 
+import cn.hctech2006.statistic.bean.Student;
 import cn.hctech2006.statistic.bean.Subject;
 import cn.hctech2006.statistic.bean.Subresult;
 import cn.hctech2006.statistic.bean.Subsmall;
+import cn.hctech2006.statistic.common.Const;
 import cn.hctech2006.statistic.common.ServerResponse;
+import cn.hctech2006.statistic.mapper.StudentMapper;
 import cn.hctech2006.statistic.mapper.SubjectMapper;
 import cn.hctech2006.statistic.mapper.SubresultMapper;
 import cn.hctech2006.statistic.mapper.SubsmallMapper;
 import cn.hctech2006.statistic.service.SubjectService;
-import cn.hctech2006.statistic.vo.SubSmallVo;
-import cn.hctech2006.statistic.vo.SubjectAndSmallVo;
-import cn.hctech2006.statistic.vo.SubjectVo;
-import cn.hctech2006.statistic.vo.SubresultVo;
+import cn.hctech2006.statistic.vo.*;
 import com.google.common.collect.Lists;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.rmi.ServerError;
 import java.sql.ClientInfoStatus;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,8 @@ public class SubjectServiceImpl implements SubjectService {
     private SubsmallMapper subsmallMapper;
     @Autowired
     private SubresultMapper subresultMapper;
+    @Autowired
+    private StudentMapper studentMapper;
     @Override
     public ServerResponse insertSubject(Subject subject) {
         subject.setSubId(UUID.randomUUID().toString());
@@ -74,6 +78,25 @@ public class SubjectServiceImpl implements SubjectService {
     public ServerResponse getAllSubJectVo() {
         return ServerResponse.createBySuccess(assembleSubjectAndSmallVo());
     }
+
+    public ServerResponse getAllSubScatVo(){
+        return ServerResponse.createBySuccess(assembleSubjectAndScatVo());
+    }
+
+    private List<SubjectAndScatVo> assembleSubjectAndScatVo(){
+        List<Subject> subjectList = subjectMapper.selectAll();
+        List<SubjectAndScatVo> subjectAndScatVoList = Lists.newArrayList();
+        for (Subject subject : subjectList){
+            SubjectAndScatVo subjectAndScatVo = new SubjectAndScatVo();
+            subjectAndScatVo.setName(subject.getName());
+            subjectAndScatVo.setOrd(subject.getOrd());
+            subjectAndScatVo.setSubId(subject.getSubId());
+            List<Subsmall> subsmallList = subsmallMapper.selectBySubId(subject.getSubId());
+            subjectAndScatVo.setSubScatVoList(assembleSubScatVo(subsmallList));
+            subjectAndScatVoList.add(subjectAndScatVo);
+        }
+        return subjectAndScatVoList;
+    }
     private List<SubjectAndSmallVo> assembleSubjectAndSmallVo(){
         List<Subject> subjectList = subjectMapper.selectAll();
         List<SubjectAndSmallVo> subjectAndSmallVoList = Lists.newArrayList();
@@ -88,7 +111,51 @@ public class SubjectServiceImpl implements SubjectService {
             }
         return subjectAndSmallVoList;
     }
+    private List<SubScatVo> assembleSubScatVo(List<Subsmall> subsmallList){
 
+        List<SubScatVo> subScatVoList  =Lists.newArrayList();
+        for (Subsmall subsmall : subsmallList){
+            SubScatVo subScatVo = new SubScatVo();
+            subScatVo.setName(subsmall.getName());
+            subScatVo.setSmId(subsmall.getSmId());
+            subScatVo.setSubId(subsmall.getSubId());
+            List<Subresult> gradeStrList = subresultMapper.selectGradeBySmId(subsmall.getSmId());
+            subScatVo.setGradeList(assembleGradeList(gradeStrList));
+
+            subScatVo.setStuNum(subScatVo.getGradeList().length+"");
+            int allGrade = 0;
+            for (int grade: subScatVo.getGradeList()){
+                allGrade += grade;
+            }
+            subScatVo.setAllGrade(allGrade);
+            subScatVoList.add(subScatVo);
+        }
+        return subScatVoList;
+    }
+    private Integer[] assembleGradeList(List<Subresult> gradeStrList){
+        List<Integer> gradeIntList = new ArrayList<>();
+
+        for (Subresult subresult : gradeStrList){
+            Student student = studentMapper.selectByStuId(subresult.getStuId());
+            if (student == null){
+                continue;
+            }
+            if (Const.SubGrade.VeryHigh.getGradeStr().equals(subresult.getGrade())){
+                gradeIntList.add(5);
+            }else if (Const.SubGrade.High.getGradeStr().equals(subresult.getGrade())){
+                gradeIntList.add(4);
+            }else if (Const.SubGrade.Normal.getGradeStr().equals(subresult.getGrade())){
+                gradeIntList.add(3);
+            }else if (Const.SubGrade.Low.getGradeStr().equals(subresult.getGrade())){
+                gradeIntList.add(2);
+            }else if (Const.SubGrade.VeryLow.getGradeStr().equals(subresult.getGrade())){
+                gradeIntList.add(1);
+            }
+        }
+        Integer[] gradeList = new Integer[gradeIntList.size()];
+        gradeIntList.toArray(gradeList);
+        return gradeList;
+    }
     private List<SubSmallVo> assembleSubsmallVo(List<Subsmall> subsmallList){
         List<SubSmallVo> subSmallVoList  =Lists.newArrayList();
         List<String> grade = Lists.newArrayList();
@@ -136,4 +203,5 @@ public class SubjectServiceImpl implements SubjectService {
         }
         return subresultVoList;
     }
+
 }

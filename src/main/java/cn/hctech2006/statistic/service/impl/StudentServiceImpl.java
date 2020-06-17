@@ -8,10 +8,7 @@ import cn.hctech2006.statistic.service.EvaluateService;
 import cn.hctech2006.statistic.service.StudentService;
 import cn.hctech2006.statistic.service.SubjectService;
 import cn.hctech2006.statistic.service.SuggestService;
-import cn.hctech2006.statistic.vo.EvaluateVo;
-import cn.hctech2006.statistic.vo.StudentOnlyVo;
-import cn.hctech2006.statistic.vo.StudentVo;
-import cn.hctech2006.statistic.vo.SubjectVo;
+import cn.hctech2006.statistic.vo.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,5 +143,15 @@ public class StudentServiceImpl implements StudentService {
         }
         classCount.put("总人数",totalCount+"");
         return ServerResponse.createBySuccess(classCount);
+    }
+    public ServerResponse getAllGradePerSmall(){
+        ServerResponse response = subjectService.getAllSubScatVo();
+        List<SubjectAndScatVo> subjectAndScatVoList = (List<SubjectAndScatVo>) response.getData();
+        ServerResponse response1 = evaluateService.getAllEvaluateAndScatVo();
+        List<EvaluateAndScatVo> evaluateAndScatVoList = (List<EvaluateAndScatVo>) response1.getData();
+        ScatResultVo scatResultVo = new ScatResultVo();
+        scatResultVo.setEvaluateAndScatVo(evaluateAndScatVoList);
+        scatResultVo.setSubjectAndScatVo(subjectAndScatVoList);
+        return ServerResponse.createBySuccess(scatResultVo);
     }
 }

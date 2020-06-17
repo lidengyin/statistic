@@ -20,5 +20,6 @@ public interface SubresultMapper {
 
     int checkByStuIdAndSmId(String stuId, String smId);
     int updateGradeByStuIdAndSmId(String stuId, String smId,String grade);
+    List<Subresult> selectGradeBySmId(String smId);
 
 }

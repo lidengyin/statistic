@@ -14,5 +14,6 @@ public interface EvaluateService {
     public ServerResponse insertEvaresult(Evaresult evaresult);
     public List<EvaluateVo> getEvaluateList(String stuId);
     public ServerResponse getAllEvaluateVo();
+    public ServerResponse getAllEvaluateAndScatVo();
 
 }

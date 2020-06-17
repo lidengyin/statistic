@@ -1,21 +1,20 @@
 package cn.hctech2006.statistic.service.impl;
 
-import cn.hctech2006.statistic.bean.Evaluate;
-import cn.hctech2006.statistic.bean.Evaresult;
-import cn.hctech2006.statistic.bean.Evasmall;
+import cn.hctech2006.statistic.bean.*;
+import cn.hctech2006.statistic.common.Const;
 import cn.hctech2006.statistic.common.ServerResponse;
 import cn.hctech2006.statistic.mapper.EvaluateMapper;
 import cn.hctech2006.statistic.mapper.EvaresultMapper;
 import cn.hctech2006.statistic.mapper.EvasmallMapper;
+import cn.hctech2006.statistic.mapper.StudentMapper;
 import cn.hctech2006.statistic.service.EvaluateService;
-import cn.hctech2006.statistic.vo.EvaluateAndSmallVo;
-import cn.hctech2006.statistic.vo.EvaluateVo;
-import cn.hctech2006.statistic.vo.EvaresultVo;
-import cn.hctech2006.statistic.vo.EvasmallVo;
+import cn.hctech2006.statistic.service.StudentService;
+import cn.hctech2006.statistic.vo.*;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @Service
@@ -26,6 +25,8 @@ public class EvaluateServiceImpl implements EvaluateService {
     private EvasmallMapper evasmallMapper;
     @Autowired
     private EvaresultMapper evaresultMapper;
+    @Autowired
+    private StudentMapper studentMapper;
     @Override
     public ServerResponse insertEValuate(Evaluate evaluate) {
         evaluate.setEvaId(UUID.randomUUID().toString());
@@ -135,5 +136,69 @@ public class EvaluateServiceImpl implements EvaluateService {
             evaresultVoList.add(evaresultVo);
         }
         return evaresultVoList;
+    }
+
+    public ServerResponse getAllEvaluateAndScatVo(){
+        return ServerResponse.createBySuccess(assembleEvaluateAndScatVo());
+    }
+    private List<EvaluateAndScatVo> assembleEvaluateAndScatVo(){
+        List<Evaluate> evaluateList = evaluateMapper.selectAll();
+        List<EvaluateAndScatVo> evaluateAndScatVoList = Lists.newArrayList();
+        for (Evaluate evaluate : evaluateList){
+            EvaluateAndScatVo evaluateAndScatVo = new EvaluateAndScatVo();
+            evaluateAndScatVo.setName(evaluate.getName());
+            evaluateAndScatVo.setOrd(evaluate.getOrd());
+            evaluateAndScatVo.setEvaId(evaluate.getEvaId());
+            List<Evasmall> evasmallList = evasmallMapper.selectByEvaId(evaluate.getEvaId());
+            evaluateAndScatVo.setEvaScatVoList(assembleEvaScatVo(evasmallList));
+            evaluateAndScatVoList.add(evaluateAndScatVo);
+        }
+        return evaluateAndScatVoList;
+    }
+    private List<EvaScatVo> assembleEvaScatVo(List<Evasmall> evasmallList){
+
+        List<EvaScatVo> evaScatVoList  =Lists.newArrayList();
+
+        for (Evasmall evasmall : evasmallList){
+            EvaScatVo evaScatVo = new EvaScatVo();
+            evaScatVo.setName(evasmall.getName());
+            evaScatVo.setEmId(evasmall.getEsId());
+            evaScatVo.setEvaId(evasmall.getEvaId());
+            List<Evaresult> gradeStrList = evaresultMapper.selectGradeByEsId(evasmall.getEsId());
+            evaScatVo.setGradeList(assembleGradeList(gradeStrList));
+
+            evaScatVo.setStuNum(evaScatVo.getGradeList().length);
+            int allGrade = 0;
+            for (int grade: evaScatVo.getGradeList()){
+                allGrade += grade;
+            }
+            evaScatVo.setAllGrade(allGrade);
+            evaScatVoList.add(evaScatVo);
+        }
+        return evaScatVoList;
+    }
+    private Integer[] assembleGradeList(List<Evaresult> gradeStrList){
+        List<Integer> gradeIntList = new ArrayList<>();
+        List<Student> studentList = studentMapper.selectAll();
+        for (Evaresult evaresult : gradeStrList){
+            Student student = studentMapper.selectByStuId(evaresult.getStuId());
+            if (student == null){
+                continue;
+            }
+            if (Const.EvaGrade.Prefect.getGradeStr().equals(evaresult.getGrade())){
+                gradeIntList.add(5);
+            }else if (Const.EvaGrade.VeryHigh.getGradeStr().equals(evaresult.getGrade())){
+                gradeIntList.add(4);
+            }else if (Const.EvaGrade.High.getGradeStr().equals(evaresult.getGrade())){
+                gradeIntList.add(3);
+            }else if (Const.EvaGrade.Normal.getGradeStr().equals(evaresult.getGrade())){
+                gradeIntList.add(2);
+            }else if (Const.EvaGrade.VeryLow.getGradeStr().equals(evaresult.getGrade())){
+                gradeIntList.add(1);
+            }
+        }
+        Integer[] gradeList = new Integer[gradeIntList.size()];
+        gradeIntList.toArray(gradeList);
+        return gradeList;
     }
 }

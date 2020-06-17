@@ -3,12 +3,12 @@ server:
   port: 8251
 spring:
   application:
-    name: mmall
+    name: statistics_1
   datasource: #数据源
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://172.17.0.1:3306/mmall?useUnicode=true&characterEncoding=UTF8&serverTime=Asia/Shanghai
+      url: jdbc:mysql://172.17.0.1:3306/hc_statistics_1?useUnicode=true&characterEncoding=UTF8&serverTime=Asia/Shanghai
       filters: stat, wall, config
       initial-size: 1
       max-active: 100
@@ -34,6 +34,21 @@ spring:
       max-file-size: 100000000
       max-request-size: 100000000
       resolve-lazily: false
+  #Redis配置
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    jedis:
+      pool:
+        max-active: -1 #制定连接池最大活跃的连接数,-1表示无限,默认是8
+        max-idle: -1 #指定连接池最大空闲连接数,-1标识无限,默认是8
+        max-wait: -1
+        #指的是当连接池耗尽时,重新获取链接需要等待的最大时间,以毫米为单位,-1标识无限等待
+        min-idle: -1 #指的是最小空闲连接数,-1标识无限,默认是8
+    timeout: 0
+  cache:
+    type: redis
 
 #  thymeleaf:
 #    prefix: classpath:/templates/

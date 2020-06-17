@@ -14,5 +14,6 @@ public interface SubjectService {
     public ServerResponse insertSubresult(Subresult subresult);
     public List<SubjectVo> getSubjectVoList(String stuId);
     public ServerResponse getAllSubJectVo();
+    public ServerResponse getAllSubScatVo();
 
 }

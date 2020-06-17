@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "学生信息接口")
 @RestController
 @RequestMapping("/student")
+//@CacheConfig(cacheNames = "CacheService")
 public class StudentController {
     @Autowired
 
@@ -68,6 +71,13 @@ public class StudentController {
     @RequestMapping(value = "/get_class_count.do",method = RequestMethod.GET)
     public ServerResponse checkCountByClassId(){
         return studentService.getAllCount();
+    }
+
+    @ApiOperation(value = "获取每个小项的成绩列表")
+    @RequestMapping(value = "/get_all_grade.do",method = RequestMethod.GET)
+//   / @Cacheable(cacheNames = "grade")
+    public ServerResponse getAllGradePerSmall(){
+        return studentService.getAllGradePerSmall();
     }
 
 }
